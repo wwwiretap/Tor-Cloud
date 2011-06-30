@@ -36,6 +36,8 @@ Datacenteres:
 - us-west-1
 
 
+TODO: we must change the design, so each instance is owned by a separate Amazon account, rather than having them all
+under one dev-pay account!
 
 Amazon Dev-Pay - easy billing and payment processing
 
