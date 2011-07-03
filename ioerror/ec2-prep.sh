@@ -7,9 +7,10 @@ DISTRO="`lsb_release -c|cut -f2`";
 SOURCES="/etc/apt/sources.list";
 CONFIG="$1";
 CONFIG_FILE="/etc/tor/torrc";
+RESERVATION="`curl -m 5 http://169.254.169.254/latest/meta-data/reservation-id`";
 
 if [ "$USER" != "root" ]; then
-  echo "root required; re-run with sudo";
+echo "root required; re-run with sudo";
   exit 1;
 fi
 
@@ -17,20 +18,20 @@ case "$CONFIG" in
    "bridge" ) echo "selecting $CONFIG config...";;
    "privatebridge" ) echo "selecting $CONFIG config...";;
    "middlerelay" ) echo "selecting $CONFIG config...";;
-   * ) 
-	echo "You did not select a proper configuration: $CONFIG";
-	echo "Please try the following examples: ";
-	echo "$0 bridge";
-	echo "$0 privatebridge";
-	echo "$0 middlerelay";
-	exit 2;
+   * )
+echo "You did not select a proper configuration: $CONFIG";
+echo "Please try the following examples: ";
+echo "$0 bridge";
+echo "$0 privatebridge";
+echo "$0 middlerelay";
+exit 2;
     ;;
 esac
 
 echo "Adding Tor's repo for $DISTRO...";
 cat << EOF >> $SOURCES
-deb     http://deb.torproject.org/torproject.org $DISTRO main
-deb     http://deb.torproject.org/torproject.org experimental-$DISTRO main
+deb http://deb.torproject.org/torproject.org $DISTRO main
+deb http://deb.torproject.org/torproject.org experimental-$DISTRO main
 EOF
 
 echo "Installing Tor's gpg key...";
@@ -48,7 +49,7 @@ if [ $CONFIG == "bridge" ]; then
 echo "Configuring Tor as a $CONFIG";
 cat << EOF > $CONFIG_FILE
 # Auto generated public Tor $CONFIG config file
-Nickname ec2$CONFIG
+Nickname ec2$CONFIG-$RESERVATION
 SocksPort 0
 ORPort 443
 BridgeRelay 1
@@ -60,7 +61,7 @@ if [ $CONFIG == "private-bridge" ]; then
 echo "Configuring Tor as a $CONFIG";
 cat << EOF > $CONFIG_FILE
 # Auto generated public Tor $CONFIG config file
-Nickname ec2$CONFIG
+Nickname ec2$CONFIG-$RESERVATION
 SocksPort 0
 ORPort 443
 BridgeRelay 1
@@ -73,7 +74,7 @@ if [ $CONFIG == "middle-relay" ]; then
 echo "Configuring Tor as a $CONFIG";
 cat << EOF > $CONFIG_FILE
 # Auto generated public Tor $CONFIG config file
-Nickname ec2$CONFIG
+Nickname ec2$CONFIG-$RESERVATION
 SocksPort 0
 ORPort 443
 DirPort 80
@@ -85,3 +86,4 @@ fi
 # Generally, we'll want to rm /var/lib/tor/* and remove all state from the system
 echo "Restarting Tor...";
 /etc/init.d/tor restart
+rm -rf /etc/init/tor-prep.conf
