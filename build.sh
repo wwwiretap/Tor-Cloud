@@ -19,11 +19,16 @@ ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/inf0.
 
 snap=$(ec2-create-snapshot ${vol} | awk {' print $2 '})
 ec2-describe-snapshots ${snap}
+
+
 rel=lucid
 qurl=http://uec-images.ubuntu.com/query/lucid/server/released.current.txt
 aki=$(curl --silent "${qurl}" | awk '-F\t' '$5 == "ebs" && $6 == arch && $7 == region { print $9 }' arch=$arch region=$region )
 echo ${aki}
-ec2-register --snapshot ${snap} --architecture=${xarch} --kernel=${aki} --name "Tor-Cloud-EC2-${rel}-${zone}" --description "Amazon's Tor Cloud Instance-Ubuntu 10.04 - ${zone}"
+sleep 180 
+ec2-register --snapshot ${snap} --architecture=i386 --kernel=${aki} --name "Tor-Cloud-EC2-${rel}-${zone}" --description "Amazon's Tor Cloud Instance-Ubuntu 10.04 - ${zone}"
+
+
 #ec2-detach-volume ${vol}
 #ec2-terminate-instances ${iid}
 #ec2-delete-volume ${vol}
