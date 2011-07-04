@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html>
+
+<!--
+	This is a jQuery Tools standalone demo. Feel free to copy/paste.
+	                                                         
+	http://flowplayer.org/tools/demos/
+	
+	Do *not* reference CSS files and images from flowplayer.org when in production  
+
+	Enjoy!
+-->
+
+<head>
+	<title>jQuery Tools standalone demo</title>
+
+	<!-- include the Tools -->
+	<script src="http://cdn.jquerytools.org/1.2.5/full/jquery.tools.min.js"></script>
+
+	 
+
+	<!-- standalone page styling (can be removed) -->
+	<link rel="stylesheet" type="text/css" href="standalone.css"/>	
+
+
+	
+	<!-- tab styling -->	
+	<link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/tabs-no-images.css"/>
+	 
+	
+	<!-- skin 2 -->
+	<style>
+	
+	
+	/* alternate colors: skin2 */
+	ul.skin2 a {
+		background-color:#89a;		
+		color:#fff !important;
+	}
+	
+	/* mouseover state */
+	ul.skin2 a:hover {
+		background-color:#678;
+	}
+	
+	/* active tab */
+	ul.skin2 a.current {
+		background-color;
+		border-bottom:2px solid #4F5C6A;	
+	}
+	
+	/* tab pane with background gradient */
+	div.skin2 div {
+		min-height:200px;
+		color:#fff;	
+		background:#33ab09  repeat-x scroll 0 -50px;
+		
+		/* IE6 does not support PNG24 images natively */
+		_background:#4F5C6A;
+	}
+	</style>
+</head>
+
+<body>
+
+
+<!-- tabs -->
+
+<ul class="css-tabs skin2">
+	<li><a href="#">Tor-Cloud</a></li>
+	<li><a href="#">Taking advantage of Amazon Cloud Free Usage Tier</a></li>
+	<li><a href="#">Start Now!</a></li>
+</ul>
+
+<!-- panes -->
+<div class="css-panes skin2">
+	<div>
+	
+
+	
+		<h2>Tor-Cloud EC2 - Easy! Cost-effective! Flexible! Awesome!</h2>
+		
+		<p>
+Amazon Web Services (AWS) is the provider of the cloud computing platform called EC2. Users are
+able to launch virtual machines and computing resources with felxible and cost-efective terms. Tor network can always benefit from more volunteered bandwidth.Using Tor Cloud, anyone can run a Tor bridge or relay and help thousands around the world communicate securely and improve their privacy on the Internet.
+		</p>			
+		
+		<br clear="all" />
+<h2>AWS Free Usage Tier (Per Month):</h2>
+
+<p>Amazon is offering a FREE tier usage. Tor Cloud AMIs qualify for this offer. Run your Tor bridge at almost no cost:<br><br>
+    750 hours of Amazon EC2 Linux Micro Instance usage,  enough hours to run continuously each month*
+    <br>750 hours of an Elastic Load Balancer plus 15 GB data processing*
+    <br>10 GB of Amazon Elastic Block Storage, plus 1 million I/Os, 1 GB of snapshot storage, 10,000 snapshot Get Requests and 1,000 snapshot Put Requests*
+    <br>5 GB of Amazon S3 standard storage, 20,000 Get Requests, and 2,000 Put Requests*
+    <br>30 GB per of internet data transfer (15 GB of data transfer and 15 GB of data transfer across all services except Amazon CloudFront)*
+<br><br>* Visit http://aws.amazon.com/free/ for details.
+</p>		
+	</div>
+	
+	<div>
+
+		<pre>
+    AWS Free Usage Tier (Per Month):
+
+    750 hours of Amazon EC2 Linux Micro Instance usage (613 MB of memory and 32-bit and 64-bit platform support) – enough hours to run continuously each month*
+    750 hours of an Elastic Load Balancer plus 15 GB data processing*
+    10 GB of Amazon Elastic Block Storage, plus 1 million I/Os, 1 GB of snapshot storage, 10,000 snapshot Get Requests and 1,000 snapshot Put Requests*
+    5 GB of Amazon S3 standard storage, 20,000 Get Requests, and 2,000 Put Requests*
+    30 GB per of internet data transfer (15 GB of data transfer “in” and 15 GB of data transfer “out” across all services except Amazon CloudFront)*
+
+		</pre>
+	</div>
+	
+	<div>
+		
+		<p>
+			In sed dolor. Etiam eget quam ac nibh pharetra adipiscing. Nullam vitae ligula. Sed sit amet leo sit amet arcu mollis ultrices. Vivamus rhoncus sapien nec lorem. In mattis nisi. Vivamus at enim. Integer semper imperdiet massa. Vestibulum nulla massa, pretium quis, porta id, vestibulum vitae, velit.
+		</p>
+	</div>
+</div>
+
+<!-- activate tabs with JavaScript -->
+<script>
+$(function() {
+	$("ul.skin2").tabs("div.skin2 > div");
+});
+</script>
+
+
+  <img src="https://www.torproject.org/images/tor-logo.jpg" alt="Tor Project" style="float:left;margin:0 30px 20px 0" />
+
+</body>
+
+</html>
+
