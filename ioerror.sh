@@ -49,7 +49,7 @@ if [ $CONFIG == "bridge" ]; then
 echo "Configuring Tor as a $CONFIG";
 cat << EOF > $CONFIG_FILE
 # Auto generated public Tor $CONFIG config file
-Nickname ec2$CONFIG-$RESERVATION
+Nickname ec2$CONFIG$RESERVATION
 SocksPort 0
 ORPort 443
 BridgeRelay 1
@@ -61,7 +61,7 @@ if [ $CONFIG == "private-bridge" ]; then
 echo "Configuring Tor as a $CONFIG";
 cat << EOF > $CONFIG_FILE
 # Auto generated public Tor $CONFIG config file
-Nickname ec2$CONFIG-$RESERVATION
+Nickname ec2$CONFIG$RESERVATION
 SocksPort 0
 ORPort 443
 BridgeRelay 1
@@ -74,7 +74,7 @@ if [ $CONFIG == "middle-relay" ]; then
 echo "Configuring Tor as a $CONFIG";
 cat << EOF > $CONFIG_FILE
 # Auto generated public Tor $CONFIG config file
-Nickname ec2$CONFIG-$RESERVATION
+Nickname ec2$CONFIG$RESERVATION
 SocksPort 0
 ORPort 443
 DirPort 80
