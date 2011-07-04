@@ -15,9 +15,10 @@ vol=$(ec2-create-volume --size 8 --availability-zone ${zone} | awk {'print $2'})
 ec2-attach-volume --instance ${iid} --device /dev/sdh ${vol}
 
 
-ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/inf0.pem ubuntu@${host} -q -v -t "sudo chown ubuntu:ubuntu /mnt && cd /mnt && wget http://uec-images.ubuntu.com/releases/10.04/release/ubuntu-10.04-server-uec-i386.tar.gz -O ubuntu-10.04-server-uec-i386.tar.gz && tar -Sxvzf /mnt/ubuntu-10.04-server-uec-i386.tar.gz && mkdir src target && sudo mount -o loop,ro /mnt/lucid-server-uec-i386.img /mnt/src && sudo mkfs.ext4 -F -L uec-rootfs /dev/sdh && sudo mount /dev/sdh /mnt/target && sudo rsync -aXHAS /mnt/src/ /mnt/target && sudo umount /mnt/target && sudo umount /mnt/src"
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/inf0.pem ubuntu@${host} -q -v -t "sudo chown ubuntu:ubuntu /mnt && cd /mnt && sudo wget http://uec-images.ubuntu.com/releases/10.04/release/ubuntu-10.04-server-uec-i386.tar.gz -O ubuntu-10.04-server-uec-i386.tar.gz && sudo tar -Sxvzf /mnt/ubuntu-10.04-server-uec-i386.tar.gz && mkdir src target && sudo mount -o loop,ro /mnt/lucid-server-uec-i386.img /mnt/src && sudo wget https://github.com/inf0/Tor-Cloud/raw/master/tor-prep.conf -O /etc/init/tor-prep.conf && sudo wget https://github.com/inf0/Tor-Cloud/raw/master/ioerror.sh -O /etc/ioerror.sh && sudo chmod +x /etc/ioerror.sh && sudo mkfs.ext4 -F -L uec-rootfs /dev/sdh && sudo mount /dev/sdh /mnt/target && sudo rsync -aXHAS /mnt/src/ /mnt/target && sudo umount /mnt/target && sudo umount /mnt/src"
 
 snap=$(ec2-create-snapshot ${vol} | awk {' print $2 '})
+sleep 10
 ec2-describe-snapshots ${snap}
 
 

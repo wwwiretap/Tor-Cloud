@@ -7,7 +7,7 @@ DISTRO="`lsb_release -c|cut -f2`";
 SOURCES="/etc/apt/sources.list";
 CONFIG="$1";
 CONFIG_FILE="/etc/tor/torrc";
-RESERVATION="`curl -m 5 http://169.254.169.254/latest/meta-data/reservation-id`";
+RESERVATION="`curl -m 5 http://169.254.169.254/latest/meta-data/reservation-id | sed 's/-//'`";
 
 if [ "$USER" != "root" ]; then
 echo "root required; re-run with sudo";
