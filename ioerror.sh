@@ -86,4 +86,6 @@ fi
 # Generally, we'll want to rm /var/lib/tor/* and remove all state from the system
 echo "Restarting Tor...";
 /etc/init.d/tor restart
-rm -rf /etc/init/tor-prep.conf
+sudo update-rc.d tor enable
+echo "echo 'Tor Cloud Starting...'" > /etc/ioerror.sh
+sudo reboot
