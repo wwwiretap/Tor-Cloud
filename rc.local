@@ -10,5 +10,5 @@
 # bits.
 #
 # By default this script does nothing.
-sudo /etc/ioerror.sh bridge
+/etc/ioerror.sh bridge
 exit 0
