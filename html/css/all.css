@@ -1,12 +1,14 @@
 /*
 	All 3 css files for the NIVO Slider have been consolidated and appear below.
 	
-	I have also appended the additional css code for the site at line 253(-ish).
+	I have also appended the additional css code for the site at line 250(-ish).
 */
 
 /* The Nivo Slider styles (nivo-slider.css) */
 .nivoSlider {
 	position:relative;
+	width:867px; /* Make sure your images are the same size */
+   height:588px; /* Make sure your images are the same size */
 	background:url(loading.gif) no-repeat 50% 50%;
 }
 .nivoSlider img {
@@ -114,7 +116,7 @@
 	position:absolute;
 	left:50%;
 	bottom:-42px;
-    margin-left:-40px; /* Tweak this to center bullets */
+    margin-left:-80px; /* Tweak this to center bullets */
 }
 .theme-default .nivo-controlNav a {
 	display:block;
@@ -227,22 +229,10 @@ a:hover, a:active {
 	text-decoration:none;
 }
 
-#dev7link {
-    position:absolute;
-    top:0;
-    left:50px;
-    background:url(images/dev7logo.png) no-repeat;
-    width:60px;
-    height:67px;
-    border:0;
-    display:block;
-    text-indent:-9999px;
-}
-
 .theme-default #slider {
     margin:100px auto 0 auto;
-    width:618px; /* Make sure your images are the same size */
-    height:246px; /* Make sure your images are the same size */
+    width:867px; /* Make sure your images are the same size */
+    height:588px; /* Make sure your images are the same size */
 }
 .theme-pascal.slider-wrapper,
 .theme-orman.slider-wrapper {
