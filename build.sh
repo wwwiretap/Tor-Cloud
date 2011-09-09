@@ -30,7 +30,7 @@ ec2-attach-volume --instance ${iid} --device /dev/sdh ${vol}
 # 
 # TODO: veridy checksum of: lucid-server-uec-i386.tar.gz
 # ssh to build machine and run a bunch of commands:
-# 	1. download http://uec-images.ubuntu.com/server/lucid/current/lucid-server-uec-i386.tar.gz
+# 	1. download http://uec-images.ubuntu.com/server/lucid/current/lucid-server-cloudimg-i386.tar.gz
 #	2. extract & mount archive
 #	3. add ioerror.sh and rc.local to the image
 #	4. rsync image content to the 4GB EBS volume which is already attached
@@ -39,7 +39,7 @@ ec2-attach-volume --instance ${iid} --device /dev/sdh ${vol}
 # download the current lucid image
 sudo chown ubuntu:ubuntu /mnt
 cd /mnt
-wget http://uec-images.ubuntu.com/server/lucid/current/lucid-server-uec-i386.tar.gz -O /mnt/lucid-server-uec-i386.tar.gz
+wget http://uec-images.ubuntu.com/server/lucid/current/lucid-server-cloudimg-i386.tar.gz -O /mnt/lucid-server-cloudimg-i386.tar.gz
 
 
 # verify checksums
@@ -59,16 +59,16 @@ checkpgp=
 if [ "$checkpgp" = "Good" ]
 then
 	echo 'Verified.'
-	tar -Sxvzf /mnt/lucid-server-uec-i386.tar.gz
+	tar -Sxvzf /mnt/lucid-server-cloudimg-i386.tar.gz
 	mkdir /mnt/src /mnt/target
-	sudo mount -o loop,rw /mnt/lucid-server-uec-i386.img /mnt/src
-	wget https://github.com/inf0/Tor-Cloud/raw/master/tor-installer.sh -O /mnt/src/etc/tor-installer.sh
+	sudo mount -o loop,rw /mnt/lucid-server-cloudimg-i386.img /mnt/src
+	wget https://github.com/inf0/Tor-Cloud/raw/master/ec2-prep.sh -O /mnt/src/etc/ec2-pre.sh
 	
 	case "$relaytype" in
 	'bridge')
 	cat << EOF > /mnt/src/etc/rc.local
 	#!/bin/sh -e
-	/etc/tor-installer.sh bridge
+	/etc/ec2-prep.sh bridge
 	exit 0
 	EOF
 	;;
@@ -82,13 +82,13 @@ then
 	'middlerelay')
 	cat << EOF > /mnt/src/etc/rc.local
 	#!/bin/sh -e
-	/etc/tor-installer.sh middlerelay
+	/etc/ec2-prep.sh middlerelay
 	exit 0
 	EOF
 	;;
 	esac
 
-	chmod +x /mnt/src/etc/tor-installer.sh
+	chmod +x /mnt/src/etc/ec2-prep.sh
         chmod +x /mnt/src/etc/rc.local
 	sudo mkfs.ext4 -F -L uec-rootfs /dev/sdh
 	sudo mount /dev/sdh /mnt/target
