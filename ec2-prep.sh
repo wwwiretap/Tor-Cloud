@@ -55,6 +55,8 @@ Nickname ec2$CONFIG$RESERVATION
 SocksPort 0
 ORPort 443
 BridgeRelay 1
+AccountingStart week 1 10:00
+AccountingMax 10 GB
 Exitpolicy reject *:*
 EOF
 fi
@@ -68,6 +70,8 @@ SocksPort 0
 ORPort 443
 BridgeRelay 1
 PublishServerDescriptor 0
+AccountingStart week 1 10:00
+AccountingMax 10 GB
 Exitpolicy reject *:*
 EOF
 fi
@@ -80,6 +84,8 @@ Nickname ec2$CONFIG$RESERVATION
 SocksPort 0
 ORPort 443
 DirPort 80
+AccountingStart week 1 10:00
+AccountingMax 10 GB
 Exitpolicy reject *:*
 EOF
 fi
