@@ -1,4 +1,21 @@
 
+/* My Changes*/
+
+.slider-wrapper{
+	display: block;
+	border: 0px;
+	padding: 0px 0px 40px 0px;
+}
+
+.slider-wrapper div {
+	display: block;
+	border: 0px;
+	padding: 0px;
+}
+
+
+
+
 /* (standalone.css) */
 
 body {
@@ -347,17 +364,6 @@ a:hover, a:active {
 	clear:both;
 }
 
-.slider-wrapper{
-	display: block;
-	border: 0px;
-	padding: 0px 0px 40px 0px;
-}
-
-.slider-wrapper div {
-	display: block;
-	border: 0px;
-	padding: 0px;
-}
 
 /*--------------------END NIVO--------------------*/
 
