@@ -1,7 +1,120 @@
+
+/* (standalone.css) */
+
+body {
+padding:50px 80px;
+font-family:"Lucida Grande","bitstream vera sans","trebuchet ms",sans-serif,verdana;
+}
+
+/* get rid of those system borders being generated for A tags */
+a:active {
+  outline:none;
+}
+
+:focus {
+  -moz-outline-style:none;
+}
+
+
+/* (tabs-no-images.css) */
+
+/* root element for tabs */
+ul.css-tabs {
+padding:0;
+height:45px;
+}
+
+/* single tab */
+ul.css-tabs li {
+float:left;
+padding:0;
+margin:0;
+list-style-type:none;
+}
+
+/* link inside the tab. uses a background image */
+ul.css-tabs a {
+float:left;
+font-size:20px;
+display:block;
+padding:10px 30px;
+margin-right: 10px;
+text-decoration:none;
+height:30px;
+color:#777;
+position:relative;
+}
+
+ul.css-tabs a:hover {
+background-color:#8235a9;
+color:white;
+}
+
+/* selected tab */
+ul.css-tabs a.current {
+background-color:#8235a9;
+color:white;;
+cursor:default;
+}
+
+
+/* tab pane */
+.css-panes div {
+display:none;
+border:1px solid #666;
+border-width:0 1px 1px 1px;
+min-height:500px;
+padding:15px 20px;
+background-color:#ddd;
+}
+
+
+
+/* (index.html) */
+
+/* alternate colors: skin2 */
+ul.skin2 a {
+background-color:white;
+color:#8235a9;
+}
+
+/* mouseover state */
+ul.skin2 a:hover {
+background-color:black;
+color:white;
+}
+
+/* active tab */
+ul.skin2 a.current {
+background-color:black;
+color: white;
+}
+
+/* tab pane with background gradient */
+div.skin2 div {
+min-height:200px;
+color: white;
+background-color: #33ab09;
+}
+a.region {
+text-align: center;
+display: inline-block;
+font-size: 20px;
+width: 150px;
+padding: 20px;
+background-color: white;
+color: black;
+}
+a.region:hover
+{
+background-color:#8235a9;
+color: white;
+}
+
+
+
 /*
 	All 3 css files for the NIVO Slider have been consolidated and appear below.
-	
-	I have also appended the additional css code for the site at line 250(-ish).
 */
 
 /* The Nivo Slider styles (nivo-slider.css) */
@@ -167,14 +280,7 @@
 /*====================*/
 /*=== Reset Styles ===*/
 /*====================*/
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, font, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td {
+div, span, a, table, caption, tbody, tfoot, thead, tr, th, td {
 	margin:0;
 	padding:0;
 	border:0;
@@ -230,7 +336,7 @@ a:hover, a:active {
 }
 
 .theme-default #slider {
-    margin:100px auto 0 auto;
+    margin:0px auto 0 auto;
     width:867px; /* Make sure your images are the same size */
     height:588px; /* Make sure your images are the same size */
 }
@@ -250,117 +356,7 @@ a:hover, a:active {
 /*--------------------END NIVO--------------------*/
 
 
-/* (standalone.css) */
 
-body {
-padding:50px 80px;
-font-family:"Lucida Grande","bitstream vera sans","trebuchet ms",sans-serif,verdana;
-}
-
-/* get rid of those system borders being generated for A tags */
-a:active {
-  outline:none;
-}
-
-:focus {
-  -moz-outline-style:none;
-}
-
-
-/* (tabs-no-images.css) */
-
-/* root element for tabs */
-ul.css-tabs {
-padding:0;
-height:45px;
-}
-
-/* single tab */
-ul.css-tabs li {
-float:left;
-padding:0;
-margin:0;
-list-style-type:none;
-}
-
-/* link inside the tab. uses a background image */
-ul.css-tabs a {
-float:left;
-font-size:20px;
-display:block;
-padding:10px 30px;
-margin-right: 10px;
-text-decoration:none;
-height:30px;
-color:#777;
-position:relative;
-}
-
-ul.css-tabs a:hover {
-background-color:#8235a9;
-color:white;
-}
-
-/* selected tab */
-ul.css-tabs a.current {
-background-color:#8235a9;
-color:white;;
-cursor:default;
-}
-
-
-/* tab pane */
-.css-panes div {
-display:none;
-border:1px solid #666;
-border-width:0 1px 1px 1px;
-min-height:500px;
-padding:15px 20px;
-background-color:#ddd;
-}
-
-
-
-/* (index.html) */
-
-/* alternate colors: skin2 */
-ul.skin2 a {
-background-color:white;
-color:#8235a9;
-}
-
-/* mouseover state */
-ul.skin2 a:hover {
-background-color:black;
-color:white;
-}
-
-/* active tab */
-ul.skin2 a.current {
-background-color:black;
-color: white;
-}
-
-/* tab pane with background gradient */
-div.skin2 div {
-min-height:200px;
-color: white;
-background-color: #33ab09;
-}
-a.region {
-text-align: center;
-display: inline-block;
-font-size: 20px;
-width: 150px;
-padding: 20px;
-background-color: white;
-color: black;
-}
-a.region:hover
-{
-background-color:#8235a9;
-color: white;
-}
 
 
 
