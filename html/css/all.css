@@ -1,13 +1,13 @@
 
 /* My Changes*/
 
-.slider-wrapper{
+.css-panes .slider-wrapper, .slider-wrapper{
 	display: block;
 	border: 0px;
-	padding: 0px 0px 40px 0px;
+	padding: 0px 0px 60px 0px;
 }
 
-.slider-wrapper div {
+.css-panes .slider-wrapper div, .slider-wrapper div {
 	display: block;
 	border: 0px;
 	padding: 0px;
