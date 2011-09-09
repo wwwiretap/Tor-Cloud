@@ -6,7 +6,9 @@
 
 iid=
 zone=us-east-1b
-host=ec2-107-20-14-92.compute-1.amazonaws.com
+region=us-east-1
+host=
+
 relaytype="$1";
 
 if [ -n "$relaytype" ]; then
@@ -116,7 +118,6 @@ ec2-describe-snapshots ${snap}
 ## Here we complete the process by regiestering our Image with Amazon!
 
 # set the desired region
-region=us-east-1
 rel=lucid
 
 # fetch the proper aki ID for our image
@@ -124,11 +125,11 @@ qurl=http://uec-images.ubuntu.com/query/lucid/server/released.current.txt
 aki=$(curl --silent "${qurl}" | awk '-F\t' '$5 == "ebs" && $6 == arch && $7 == region { print $9 }' arch=$arch region=$region )
 echo ${aki}
 
-# TODO: make this smarter, for now sleep 120 seconds
-#sleep 120
-
+NOW=$(date +"%m-%d-%Y")
 # Finally register the snapshot
-ec2-register --snapshot ${snap} --architecture=i386 --kernel=${aki} --name "Tor-Cloud-EC2-${rel}-${zone}" --description "Tor Cloud - Private Bridege - Ubuntu 10.04.3 LTS [Lucid Lynx] - [${region}]"
+ec2-register --snapshot ${snap} --architecture=i386 --kernel=${aki} --name "Tor-Cloud-EC2-${rel}-${zone}-${NOW}" --description "Tor Cloud - Private Bridege - Ubuntu 10.04.3 LTS [Lucid Lynx] - [${region}]"
+
+
 
 
 
