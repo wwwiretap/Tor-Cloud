@@ -56,7 +56,7 @@ gpg --verify /mnt/SHA256SUMS.gpg /mnt/SHA256SUMS &> /mnt/verify.txt
 checkpgp=$(cat /mnt/verify.txt  | grep Good | awk {'print $2'})
 
 
-if [ "$checkpgp" = "Good" ]
+if [ $checkpgp = "Good" ]
 then
 	echo 'Verified.'
 	tar -Sxvzf /mnt/lucid-server-cloudimg-i386.tar.gz
@@ -70,21 +70,21 @@ then
 	#!/bin/sh -e
 	/etc/ec2-prep.sh bridge
 	exit 0
-	EOF
+EOF
 	;;
 	'privatebridge')
 	cat << EOF > /mnt/src/etc/rc.local
 	#!/bin/sh -e
 	/etc/tor-installer.sh privatebridge
 	exit 0
-	EOF
+EOF
 	;;
 	'middlerelay')
 	cat << EOF > /mnt/src/etc/rc.local
 	#!/bin/sh -e
 	/etc/ec2-prep.sh middlerelay
 	exit 0
-	EOF
+EOF
 	;;
 	esac
 
