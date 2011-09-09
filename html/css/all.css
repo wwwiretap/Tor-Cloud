@@ -63,7 +63,7 @@ cursor:default;
 display:none;
 border:1px solid #666;
 border-width:0 1px 1px 1px;
-min-height:500px;
+/*min-height:500px;*/
 padding:15px 20px;
 background-color:#ddd;
 }
@@ -92,7 +92,7 @@ color: white;
 
 /* tab pane with background gradient */
 div.skin2 div {
-min-height:200px;
+/*min-height:200px;*/
 color: white;
 background-color: #33ab09;
 }
@@ -285,10 +285,6 @@ div, span, a, table, caption, tbody, tfoot, thead, tr, th, td {
 	padding:0;
 	border:0;
 	outline:0;
-	font-weight:inherit;
-	font-style:inherit;
-	font-size:100%;
-	font-family:inherit;
 	vertical-align:baseline;
 }
 body {
@@ -321,7 +317,6 @@ aside, nav, article, figure {
 /*=== Main Styles ===*/
 /*===================*/
 body {
-	font:14px/1.6 Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
 	color:#333;
 	background:#eee;
 }
@@ -352,6 +347,17 @@ a:hover, a:active {
 	clear:both;
 }
 
+.slider-wrapper{
+	display: block;
+	border: 0px;
+	padding: 0px 0px 40px 0px;
+}
+
+.slider-wrapper div {
+	display: block;
+	border: 0px;
+	padding: 0px;
+}
 
 /*--------------------END NIVO--------------------*/
 
