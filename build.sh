@@ -52,11 +52,9 @@ wget http://uec-images.ubuntu.com/server/lucid/current/SHA256SUMS.gpg -O /mnt/SH
 
 
 #run gpg check
-gpg --verify /mnt/SHA256SUMS.gpg /mnt/SHA256SUMS &> verify.txt
-checkpgp=$(cat verify.txt  | grep Good | awk {'print $2'})
+gpg --verify /mnt/SHA256SUMS.gpg /mnt/SHA256SUMS &> /mnt/verify.txt
+checkpgp=$(cat /mnt/verify.txt  | grep Good | awk {'print $2'})
 
-
-checkpgp=
 
 if [ "$checkpgp" = "Good" ]
 then
@@ -129,14 +127,10 @@ NOW=$(date +"%m-%d-%Y")
 # Finally register the snapshot
 ec2-register --snapshot ${snap} --architecture=i386 --kernel=${aki} --name "Tor-Cloud-EC2-${rel}-${zone}-${NOW}" --description "Tor Cloud - Private Bridege - Ubuntu 10.04.3 LTS [Lucid Lynx] - [${region}]"
 
-
-
-
-
 # cleanup
 ec2-detach-volume ${vol}
 sleep 30
 ec2-delete-volume ${vol}
-rm -rf /mnt/*
+#rm -rf /mnt/*
 
 

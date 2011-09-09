@@ -95,5 +95,6 @@ fi
 echo "Restarting Tor...";
 /etc/init.d/tor restart
 sudo update-rc.d tor enable
-echo "echo 'Tor Cloud Starting...'" > /etc/tor-installer.sh
+echo "echo 'Tor Cloud Starting...'" > /etc/ec2-prep.sh
+
 sudo reboot
