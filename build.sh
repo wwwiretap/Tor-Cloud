@@ -63,12 +63,15 @@ ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-c
 #ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -t "gpg --verify /mnt/SHA256SUMS.gpg /mnt/SHA256SUMS &> /mnt/verify.txt && cat /mnt/verify.txt | grep Good | awk {'print $2'})"
 
 
-
-ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -t "sudo cat << EOF > /mnt/src/etc/rc.local
+#breaks over ssh
+#ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -t "sudo cat << EOF > /mnt/src/etc/rc.local
 #!/bin/sh -e
-/etc/ec2-prep.sh bridge
-exit 0
-EOF"
+#/etc/ec2-prep.sh bridge
+#exit 0
+#EOF"
+
+sh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -v -t "sudo wget https://raw.github.com/inf0/Tor-Cloud/master/rc.local -O /mnt/src/etc/rc.local"
+
 
 
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -v -t "sudo wget https://raw.github.com/inf0/Tor-Cloud/master/ec2-prep.sh -O /mnt/src/etc/ec2-prep.sh"
