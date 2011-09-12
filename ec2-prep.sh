@@ -42,6 +42,7 @@ gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
 
 echo "Installing Tor...";
 aptitude safe-upgrade -y
+apt-get -y update 
 apt-get -y install tor tor-geoipdb
 
 echo "Configuring Tor...";
