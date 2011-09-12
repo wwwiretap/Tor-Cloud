@@ -41,7 +41,7 @@ gpg --keyserver keys.gnupg.net --recv 886DDD89
 gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
 
 echo "Installing Tor...";
-apt-get -y update
+aptitude safe-upgrade -y
 apt-get -y install tor tor-geoipdb
 
 echo "Configuring Tor...";
