@@ -1,0 +1,3 @@
+#!/bin/sh -e
+/etc/ec2-prep.sh bridge
+exit 0
