@@ -1,136 +1,102 @@
 # launch instance of canonical AMI Ubuntu 10.04 LTS (Lucid Lynx)
 # we will use this image to build our Tor Cloud EBS instance
-# Install ec2-api-tools first! https://help.ubuntu.com/community/EC2StartersGuide
-# apt-get install ec2-api-tools
-# Define static variables for the build machine:
 
-iid=
-zone=us-east-1b
-region=us-east-1
-host=
+export EC2_PRIVATE_KEY=/home/architect/pk.cert
+export EC2_CERT=/home/architect/cert.pem
 
-relaytype="$1";
+
+
+#REGION eu-west-1       ec2.eu-west-1.amazonaws.com
+#REGION us-east-1       ec2.us-east-1.amazonaws.com
+#REGION ap-northeast-1  ec2.ap-northeast-1.amazonaws.com
+#REGION us-west-1       ec2.us-west-1.amazonaws.com
+#REGION ap-southeast-1  ec2.ap-southeast-1.amazonaws.com
+
+region=$2
+arch=i386
+relaytype=$1;
 
 if [ -n "$relaytype" ]; then
         echo "Starting ..."
 else
-        echo "You must define bridge type first."
-	exit
+        echo "Try ./buil.sh bridge us-east-1 for US East region."
+        echo "Note: only run 1 region per build."
+        echo "Obtain a list of regions using the ec2-api-tools: ec2-describe-regions"
+        exit
 fi
+
+
+# get Ubuntu's official AMI for the selected region, arch, instance type
+
+echo ${region}
+echo ${arch}
+
+qurl=http://uec-images.ubuntu.com/query/lucid/server/released.current.txt
+curl --silent ${qurl} | grep ebs
+ami=$(curl --silent "${qurl}" | awk '-F\t' '$5 == "ebs" && $6 == arch && $7 == region { print $8 }' arch=$arch region=$region )
+
+# we also need the associated kernel id
+aki=$(curl --silent "${qurl}" | awk '-F\t' '$5 == "ebs" && $6 == arch && $7 == region { print $9 }' arch=$arch region=$region )
+
+echo ${ami}
+echo ${aki}
+
+
+iid=$(ec2-run-instances --region ${region} --instance-type t1.micro --key tor-cloud  ${ami} --group  tor-cloud-build| awk {'print $2'} | grep i-)
+echo ${iid}
+sleep 5
+zone=$(ec2-describe-instances --region ${region} $iid | awk '-F\t' '$2 == iid { print $12 }' iid=${iid} )
+echo ${zone}
+sleep 20
+host=$(ec2-describe-instances --region ${region} $iid | awk '-F\t' '$2 == iid { print $4 }' iid=${iid} )
+echo ${host}
+
+sleep 30
 
 # create and attached ebs volume to be used for snapshot
-# volume size set to 4GB v.s 8GB (ubuntu ec2 default size)
-# this should help save some EBS storage charges
-ec2-create-volume --size 4 --availability-zone ${zone}
-# fetch volume ID
-vol=$(ec2-create-volume --size 4 --availability-zone ${zone} | awk {'print $2'})
-
-# attache volume to build machine
-ec2-attach-volume --instance ${iid} --device /dev/sdh ${vol}
-
-# This is where the magic happens:
-# 
-# TODO: veridy checksum of: lucid-server-uec-i386.tar.gz
-# ssh to build machine and run a bunch of commands:
-# 	1. download http://uec-images.ubuntu.com/server/lucid/current/lucid-server-cloudimg-i386.tar.gz
-#	2. extract & mount archive
-#	3. add ioerror.sh and rc.local to the image
-#	4. rsync image content to the 4GB EBS volume which is already attached
-#	5. unmount 
-
-# download the current lucid image
-sudo chown ubuntu:ubuntu /mnt
-cd /mnt
-wget http://uec-images.ubuntu.com/server/lucid/current/lucid-server-cloudimg-i386.tar.gz -O /mnt/lucid-server-cloudimg-i386.tar.gz
+vol=$(ec2-create-volume --size 4 --region ${region} --availability-zone ${zone} | awk {'print $2'})
+ec2-attach-volume --instance ${iid} --region ${region} --device /dev/sdh ${vol}
 
 
-# verify checksums
-# fetch the signing key to the build machine (just once):  gpg --keyserver keyserver.ubuntu.com --recv-key 0x7DB87C81
-wget http://uec-images.ubuntu.com/server/lucid/current/SHA256SUMS -O /mnt/SHA256SUMS
-wget http://uec-images.ubuntu.com/server/lucid/current/SHA256SUMS.gpg -O /mnt/SHA256SUMS.gpg
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -t "sudo chown ubuntu:ubuntu /mnt && cd /mnt && wget http://uec-images.ubuntu.com/releases/10.04/release/ubuntu-10.04-server-uec-i386.tar.gz -O ubuntu-10.04-server-uec-i386.tar.gz && tar -Sxvzf /mnt/ubuntu-10.04-server-uec-i386.tar.gz && mkdir src target && sudo mount -o loop,rw /mnt/lucid-server-uec-i386.img /mnt/src && sudo mkfs.ext4 -F -L uec-rootfs /dev/sdh && sudo mount /dev/sdh /mnt/target"
+
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -t "gpg --verify /mnt/SHA256SUMS.gpg /mnt/SHA256SUMS &> /mnt/verify.txt && cat /mnt/verify.txt | grep Good | awk {'print $2'})"
 
 
 
-#run gpg check
-gpg --verify /mnt/SHA256SUMS.gpg /mnt/SHA256SUMS &> /mnt/verify.txt
-checkpgp=$(cat /mnt/verify.txt  | grep Good | awk {'print $2'})
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -t "sudo cat << EOF > /mnt/src/etc/rc.local
+#!/bin/sh -e
+/etc/ec2-prep.sh bridge
+exit 0
+EOF"
 
 
-if [ $checkpgp = "Good" ]
-then
-	echo 'Verified.'
-	tar -Sxvzf /mnt/lucid-server-cloudimg-i386.tar.gz
-	mkdir /mnt/src /mnt/target
-	sudo mount -o loop,rw /mnt/lucid-server-cloudimg-i386.img /mnt/src
-	wget https://github.com/inf0/Tor-Cloud/raw/master/ec2-prep.sh -O /mnt/src/etc/ec2-pre.sh
-	
-	case "$relaytype" in
-	'bridge')
-	cat << EOF > /mnt/src/etc/rc.local
-	#!/bin/sh -e
-	/etc/ec2-prep.sh bridge
-	exit 0
-EOF
-	;;
-	'privatebridge')
-	cat << EOF > /mnt/src/etc/rc.local
-	#!/bin/sh -e
-	/etc/tor-installer.sh privatebridge
-	exit 0
-EOF
-	;;
-	'middlerelay')
-	cat << EOF > /mnt/src/etc/rc.local
-	#!/bin/sh -e
-	/etc/ec2-prep.sh middlerelay
-	exit 0
-EOF
-	;;
-	esac
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -v -t "sudo wget https://raw.github.com/inf0/Tor-Cloud/master/ec2-prep.sh -O /mnt/src/etc/ec2-prep.sh"
 
-	chmod +x /mnt/src/etc/ec2-prep.sh
-        chmod +x /mnt/src/etc/rc.local
-	sudo mkfs.ext4 -F -L uec-rootfs /dev/sdh
-	sudo mount /dev/sdh /mnt/target
-	sudo rsync -aXHAS /mnt/src/ /mnt/target 
-	sudo umount /mnt/target
-	sudo umount /mnt/src
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -v -t "sudo chmod +x /mnt/src/etc/ec2-prep.sh && chmod /mnt/src/etc/ec2-prep.sh"
 
-	#create snapshot of 4GB EBS volume we made above
-	snap=$(ec2-create-snapshot ${vol} | awk {' print $2 '})
-	#sleep for 15 seconds to complete the snapshot
-	sleep 15
-	#print results
-	ec2-describe-snapshots ${snap}
-else
-	echo 'GPG verification failed.'
-fi
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -v -t "sudo rsync -aXHAS /mnt/src/ /mnt/target"
 
-# create snapshot of 4GB EBS volume we made above
-snap=$(ec2-create-snapshot ${vol} | awk {' print $2 '})
-# wait 10 seconds to compplte snapshot
-sleep 10
-# display results
-ec2-describe-snapshots ${snap}
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i ~/keys/tor-cloud.pem ubuntu@${host} -q -v -t "sudo umount /mnt/target && sudo umount /mnt/src"
 
-## Here we complete the process by regiestering our Image with Amazon!
 
-# set the desired region
+snap=$(ec2-create-snapshot --region ${region} ${vol} | awk {' print $2 '})
+sleep 100
+ec2-describe-snapshots --region ${region} ${snap}
 rel=lucid
-
-# fetch the proper aki ID for our image
 qurl=http://uec-images.ubuntu.com/query/lucid/server/released.current.txt
 aki=$(curl --silent "${qurl}" | awk '-F\t' '$5 == "ebs" && $6 == arch && $7 == region { print $9 }' arch=$arch region=$region )
 echo ${aki}
 
+
 NOW=$(date +"%m-%d-%Y")
-# Finally register the snapshot
-ec2-register --snapshot ${snap} --architecture=i386 --kernel=${aki} --name "Tor-Cloud-EC2-${rel}-${zone}-${NOW}" --description "Tor Cloud - Private Bridege - Ubuntu 10.04.3 LTS [Lucid Lynx] - [${region}]"
+RANDOM=$(echo `</dev/urandom tr -dc A-Za-z0-9 | head -c8`)
+ec2-register --snapshot ${snap} --architecture=i386 --kernel=${aki} --name "Tor-Cloud-EC2-${rel}-${zone}-${NOW}-${RANDOM}" --description "Tor Cloud - Private Bridege - Ubuntu 10.04.3 LTS [Lucid Lynx] - [${region}]"
 
-# cleanup
+
 ec2-detach-volume ${vol}
-sleep 30
+sleep 20
+ec2-terminate-instances ${iid}
+sleep 20
 ec2-delete-volume ${vol}
-#rm -rf /mnt/*
-
 
