@@ -101,23 +101,33 @@ ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i  ${sshkey}  
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  -i  ${sshkey}  ubuntu@${host} -q -v -t "sudo umount /mnt/target && sudo umount /mnt/src"
 
 # create a snapshot from Volume
-snap=$(ec2-create-snapshot --region ${region} ${vol} | awk {' print $2 '})
+snap=$(ec2-create-snapshot --region ${region} ${vol} | grep ${vol}  | awk {' print $2 '})
 
+echo "ec2-describe-snapshots --region ${region}"
+ec2-describe-snapshots --region ${region} 
 
-sleep 300;
+# smarter sleep 
+
+hold=$(ec2-describe-snapshots --region ${region} | grep ${snap}  | awk {'print $4}')
+echo $hold
+
+while [ "$hold" != "completed" ]
+do
+hold=$(ec2-describe-snapshots --region ${region} | grep ${snap}  | awk {'print $4}') && sleep 20
+echo $hold
+done
+
 
 # create NOW and RANDOM variables to be used in the description field of the image
 NOW=$(date +"%m-%d-%Y")
 RANDOM=$(echo `</dev/urandom tr -dc A-Za-z0-9 | head -c8`)
 
-# Finally register and publish the image
-ec2-register --snapshot ${snap} --architecture=i386 --kernel=${aki} --name "Tor-Cloud-EC2-${rel}-${region}-${NOW}-${RANDOM}" --description "Tor Cloud Server - [bridge] - Ubuntu 10.04.3 LTS [Lucid Lynx] - [${region}] by: expressiontech.org/torcloud"
+ec2-register --region ${region} --snapshot ${snap} --architecture=i386 --kernel=${aki} --name "Tor-Cloud-EC2-${rel}-${region}-${NOW}-${RANDOM}" --description "Tor Cloud Server - [bridge] - Ubuntu 10.04.3 LTS [Lucid Lynx] - [${region}] by: expressiontech.org/torcloud"
 
-sleep 20
+# Finally register and publish the image
+echo "ec2-register --region ${region}  --snapshot ${snap} --architecture=i386 --kernel=${aki} --name \"Tor-Cloud-EC2-${rel}-${region}-${NOW}-${RANDOM}\" --description \"Tor Cloud Server - [bridge] - Ubuntu 10.04.3 LTS [Lucid Lynx] - [${region}] by: expressiontech.org/torcloud\""
+
 # cleanup
-ec2-detach-volume ${vol}
-sleep 20
-ec2-terminate-instances ${iid}
-sleep 20
-ec2-delete-volume ${vol}
+echo "ec2-detach-volume --region ${region}  ${vol}"
+echo "ec2-terminate-instances --region ${region}  ${iid}"
 
