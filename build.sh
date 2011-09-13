@@ -1,5 +1,5 @@
 # Copyright (c) 2011 Expression Technologies <info@expressiontech.org>
-# Copyright (c) 2011 SiNA Rabbani <sina@expressiontech.org>
+# Copyright (c) 2011 SiNA <sina@expressiontech.org>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -122,12 +122,14 @@ done
 NOW=$(date +"%m-%d-%Y")
 RANDOM=$(echo `</dev/urandom tr -dc A-Za-z0-9 | head -c8`)
 
+# Finally register and publish the image
 ec2-register --region ${region} --snapshot ${snap} --architecture=i386 --kernel=${aki} --name "Tor-Cloud-EC2-${rel}-${region}-${NOW}-${RANDOM}" --description "Tor Cloud Server - [bridge] - Ubuntu 10.04.3 LTS [Lucid Lynx] - [${region}] by: expressiontech.org/torcloud"
 
 # Finally register and publish the image
-echo "ec2-register --region ${region}  --snapshot ${snap} --architecture=i386 --kernel=${aki} --name \"Tor-Cloud-EC2-${rel}-${region}-${NOW}-${RANDOM}\" --description \"Tor Cloud Server - [bridge] - Ubuntu 10.04.3 LTS [Lucid Lynx] - [${region}] by: expressiontech.org/torcloud\""
+#echo "ec2-register --region ${region}  --snapshot ${snap} --architecture=i386 --kernel=${aki} --name \"Tor-Cloud-EC2-${rel}-${region}-${NOW}-${RANDOM}\" --description \"Tor Cloud Server - [bridge] - Ubuntu 10.04.3 LTS [Lucid Lynx] - [${region}] by: expressiontech.org/torcloud\""
 
 # cleanup
-echo "ec2-detach-volume --region ${region}  ${vol}"
-echo "ec2-terminate-instances --region ${region}  ${iid}"
+ec2-detach-volume --region ${region}  ${vol}
+sleep 20
+ec2-terminate-instances --region ${region}  ${iid}
 
