@@ -1,4 +1,0 @@
-#!/bin/sh -e
-sudo aptitude -y safe-upgrade
-sudo /etc/ec2-prep.sh bridge
-exit 0
